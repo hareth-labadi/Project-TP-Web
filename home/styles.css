@@ -28,6 +28,7 @@ body {
     margin: 0;
 }
 
+
 .login-button {
     position: absolute;
     top: 20px;
@@ -44,6 +45,25 @@ body {
 .login-button:hover {
     background-color: #ddd;
 }
+
+/* New CSS for register button */
+.register-button {
+    position: absolute;
+    top: 20px;
+    right: 120px;
+    padding: 10px 20px;
+    background-color: #020631;
+    border: 1px solid #f9f9f9;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #f9f9f9;
+}
+
+.register-button:hover {
+    background-color: #B10EF1;
+}
+
 
 .container {
     padding: 20px;
@@ -144,3 +164,5 @@ li {
 .custom-checkbox:hover {
     cursor: pointer;
 }
+
+/* New CSS for register button */

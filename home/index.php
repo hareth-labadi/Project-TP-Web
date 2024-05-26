@@ -1,3 +1,22 @@
+<?php
+session_start();
+include 'config.php';
+
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    // Fetch tasks for the logged-in user
+    $sql = "SELECT id, description, status, category FROM tasks WHERE user_id = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+} else {
+    // Fetch tasks for the guest session (no user_id)
+    $sql = "SELECT id, description, status, category FROM tasks WHERE user_id IS NULL";
+    $stmt = $db->prepare($sql);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +28,15 @@
 <body>
     <div class="icon-container">
         <img src="../icons/icon.svg" alt="SVG Image">
-        <h1>To-Do List</h1>
-        <button class="login-button" onclick="window.location.href='login.php'">Login</button>
+        <h1>To-Do List</h1>    
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <button class="login-button" onclick="window.location.href='../auth/logout.php'">Logout</button>
+        <?php else: ?>
+            <button class="login-button" onclick="window.location.href='../auth/login.php'">Login</button>
+            <button class="register-button" onclick="window.location.href='../auth/register.php'">Register</button>    
+        <?php endif; ?>
     </div>
+
     <div class="container">
         <!-- Input field -->
         <form id="taskForm" action="add_task.php" method="post">
@@ -23,6 +48,7 @@
         
         <!-- Task list -->
         <h2>Tasks:</h2>
+
         <ul id="taskList">
             <?php
             include 'config.php';
