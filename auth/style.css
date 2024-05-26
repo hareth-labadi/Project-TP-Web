@@ -26,13 +26,13 @@ body {
 }
 
 .header-container img {
-    width: 100px; /* Increase the size */
-    height: 100px; /* Increase the size */
+    width: 100px; 
+    height: 100px; 
     margin: 5px;
 }
 
 .header-container h1 {
-    font-size: 2em; /* Increase the size */
+    font-size: 2em; 
     margin: 5px;
 }
 
