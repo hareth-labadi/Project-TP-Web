@@ -10,9 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['task_id'])) {
     $stmt->bind_param("ssi", $description, $status, $id);
     $stmt->execute();
 
-    // Redirect to index.php after successful update
     header("Location: index.php");
-    exit(); // Ensure no further code execution after redirection
+    exit();
 
     $stmt->close();
 }

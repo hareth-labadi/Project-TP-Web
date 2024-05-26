@@ -4,12 +4,10 @@ include 'config.php';
 
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
-    // Fetch tasks for the logged-in user
     $sql = "SELECT id, description, status, category FROM tasks WHERE user_id = ?";
     $stmt = $db->prepare($sql);
     $stmt->bind_param("i", $user_id);
 } else {
-    // Fetch tasks for the guest session (no user_id)
     $sql = "SELECT id, description, status, category FROM tasks WHERE user_id IS NULL";
     $stmt = $db->prepare($sql);
 }
@@ -38,7 +36,7 @@ $result = $stmt->get_result();
     </div>
 
     <div class="container">
-        <!-- Input field -->
+
         <form id="taskForm" action="add_task.php" method="post">
             <div class="task-input-container">
                 <input type="text" id="taskInput" name="description" placeholder="✍️   New task...">
@@ -46,14 +44,12 @@ $result = $stmt->get_result();
             </div>
         </form>
         
-        <!-- Task list -->
         <h2>Tasks:</h2>
 
         <ul id="taskList">
             <?php
             include 'config.php';
 
-            // Fetch tasks
             $sql = "SELECT id, description, status FROM tasks";
             $result = $db->query($sql);
 
@@ -72,7 +68,7 @@ $result = $stmt->get_result();
                     echo "</li>";
                 }
             } else {
-                echo "<img src='../icons/notask.svg' alt='SVG Image' class='notask-button'>"; // Fixed single quote issue
+                echo "<img src='../icons/notask.svg' alt='SVG Image' class='notask-button'>"; 
             }
 
             $db->close();
