@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS tasks (
     status ENUM('pending', 'completed') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+

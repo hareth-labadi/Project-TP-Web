@@ -4,16 +4,13 @@ include 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = $_POST['description'];
-    $category = $_POST['category'];
+    $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
-    if (isset($_SESSION['user_id'])) {
-        $user_id = $_SESSION['user_id'];
-        $stmt = $db->prepare("INSERT INTO tasks (description, category, status, user_id) VALUES (?, ?, 'pending', ?)");
-        $stmt->bind_param("ssi", $description, $category, $user_id);
-    } else {
-        $stmt = $db->prepare("INSERT INTO tasks (description, category, status) VALUES (?, ?, 'pending')");
-        $stmt->bind_param("ss", $description, $category);
+    $stmt = $db->prepare("INSERT INTO tasks (description, status, user_id) VALUES (?, 'pending', ?)");
+    if ($stmt === false) {
+        die("Error: " . $db->error);
     }
+    $stmt->bind_param("si", $description, $user_id);
 
     if ($stmt->execute()) {
         header("Location: index.php");

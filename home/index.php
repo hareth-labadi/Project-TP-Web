@@ -2,19 +2,23 @@
 session_start();
 include 'config.php';
 
+// Check if the user is logged in
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
+
+    // Fetch tasks for the logged-in user
     $sql = "SELECT id, description, status, category FROM tasks WHERE user_id = ?";
     $stmt = $db->prepare($sql);
     $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 } else {
-    $sql = "SELECT id, description, status, category FROM tasks WHERE user_id IS NULL";
-    $stmt = $db->prepare($sql);
+    // If not logged in, redirect to login page
+    header("Location: ../auth/login.php");
+    exit();
 }
-
-$stmt->execute();
-$result = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +40,6 @@ $result = $stmt->get_result();
     </div>
 
     <div class="container">
-
         <form id="taskForm" action="add_task.php" method="post">
             <div class="task-input-container">
                 <input type="text" id="taskInput" name="description" placeholder="✍️   New task...">
@@ -48,30 +51,19 @@ $result = $stmt->get_result();
 
         <ul id="taskList">
             <?php
-            include 'config.php';
-
-            $sql = "SELECT id, description, status FROM tasks";
-            $result = $db->query($sql);
-
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<li" . ($row['status'] == 'completed' ? " class='completed'" : "") . ">";
-                    echo "<form action='update_task.php' method='post'>";
-                    echo "<input type='hidden' name='task_id' value='" . $row['id'] . "'>";
-                    echo "<input type='checkbox' class='custom-checkbox' name='status' value='completed'" . ($row['status'] == 'completed' ? 'checked' : '') . " onchange='this.form.submit()'>";
-                    echo "<input type='text' name='description' value='" . htmlspecialchars($row['description']) . "'" . ($row['status'] == 'completed' ? " style='text-decoration: line-through; color:white;'" : "") . ">";
-                    echo "</form>";
-                    echo "<form action='delete_task.php' method='post'>";
-                    echo "<input type='hidden' name='id' value='" . $row['id'] . "'>";
-                    echo "<button type='submit' class='del-button'><img src='../icons/delete.svg' alt='Delete Icon'></button>";
-                    echo "</form>";
-                    echo "</li>";
-                }
-            } else {
-                echo "<img src='../icons/notask.svg' alt='SVG Image' class='notask-button'>"; 
+            while ($row = $result->fetch_assoc()) {
+                echo "<li" . ($row['status'] == 'completed' ? " class='completed'" : "") . ">";
+                echo "<form action='update_task.php' method='post'>";
+                echo "<input type='hidden' name='task_id' value='" . $row['id'] . "'>";
+                echo "<input type='checkbox' class='custom-checkbox' name='status' value='completed'" . ($row['status'] == 'completed' ? 'checked' : '') . " onchange='this.form.submit()'>";
+                echo "<input type='text' name='description' value='" . htmlspecialchars($row['description']) . "'" . ($row['status'] == 'completed' ? " style='text-decoration: line-through; color:white;'" : "") . ">";
+                echo "</form>";
+                echo "<form action='delete_task.php' method='post'>";
+                echo "<input type='hidden' name='id' value='" . $row['id'] . "'>";
+                echo "<button type='submit' class='del-button'><img src='../icons/delete.svg' alt='Delete Icon'></button>";
+                echo "</form>";
+                echo "</li>";
             }
-
-            $db->close();
             ?>
         </ul>
     </div>
