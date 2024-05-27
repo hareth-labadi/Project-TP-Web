@@ -13,7 +13,7 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
     // Set a temporary session user ID for testing purposes
-    $user_id = -1; // Change this to the desired user ID
+    $user_id = -1; 
 }
 
 // Fetch tasks for the logged-in user or the temporary user ID
