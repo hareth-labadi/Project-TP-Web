@@ -1,7 +1,5 @@
--- Create the database if it doesn't exist
 CREATE DATABASE IF NOT EXISTS to_do_list;
 
--- Use the database
 USE to_do_list;
 
 -- Drop the tables if they already exist
