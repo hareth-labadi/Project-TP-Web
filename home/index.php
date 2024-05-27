@@ -86,7 +86,6 @@ if ($categoriesResult->num_rows > 0) {
         </form>
         
         <h2>Tasks:</h2>
-
         <ul id="taskList">
             <?php if ($result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
