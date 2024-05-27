@@ -21,6 +21,8 @@ $sql = "SELECT tasks.id, tasks.description, tasks.status, tasks.category_id, cat
         FROM tasks 
         LEFT JOIN categories ON tasks.category_id = categories.id 
         WHERE tasks.user_id = ?";
+
+// Useful for sql injection
 $stmt = $db->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
