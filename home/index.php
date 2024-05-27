@@ -13,16 +13,31 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
     // Set a temporary session user ID for testing purposes
-    // You can change this value to any user ID you want to test with
-    $user_id = 1; // Change this to the desired user ID
+    $user_id = -1; // Change this to the desired user ID
 }
 
 // Fetch tasks for the logged-in user or the temporary user ID
-$sql = "SELECT id, description, status, category FROM tasks WHERE user_id = ?";
+$sql = "SELECT tasks.id, tasks.description, tasks.status, tasks.category_id, categories.name AS category 
+        FROM tasks 
+        LEFT JOIN categories ON tasks.category_id = categories.id 
+        WHERE tasks.user_id = ?";
 $stmt = $db->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
+
+// Fetch categories for the logged-in user
+$categoriesSql = "SELECT id, name FROM categories WHERE user_id = ?";
+$categoriesStmt = $db->prepare($categoriesSql);
+$categoriesStmt->bind_param("i", $user_id);
+$categoriesStmt->execute();
+$categoriesResult = $categoriesStmt->get_result();
+$categories = [];
+if ($categoriesResult->num_rows > 0) {
+    while ($category = $categoriesResult->fetch_assoc()) {
+        $categories[] = $category;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -50,9 +65,22 @@ $result = $stmt->get_result();
     <?php endif; ?>
 
     <div class="container">
+        <form id="categoryForm" action="add_category.php" method="post">
+            <div class="category-input-container">
+                <input type="text" id="categoryInput" name="category_name" placeholder="➕   New category...">
+                <button type="submit" class="add-button"><img src="../icons/add.svg" alt="Add Icon"></button>
+            </div>
+        </form>
+
         <form id="taskForm" action="add_task.php" method="post">
             <div class="task-input-container">
                 <input type="text" id="taskInput" name="description" placeholder="✍️   New task...">
+                <select name="category_id">
+                    <option value="">No Category</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+                    <?php endforeach; ?>
+                </select>
                 <button type="submit" class="add-button"><img src="../icons/add.svg" alt="Add Icon"></button>
             </div>
         </form>
@@ -60,27 +88,31 @@ $result = $stmt->get_result();
         <h2>Tasks:</h2>
 
         <ul id="taskList">
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<li" . ($row['status'] == 'completed' ? " class='completed'" : "") . ">";
-                    echo "<form action='update_task.php' method='post'>";
-                    echo "<input type='hidden' name='task_id' value='" . $row['id'] . "'>";
-                    echo "<input type='checkbox' class='custom-checkbox' name='status' value='completed'" . ($row['status'] == 'completed' ? 'checked' : '') . " onchange='this.form.submit()'>";
-                    echo "<input type='text' name='description' value='" . htmlspecialchars($row['description']) . "'" . ($row['status'] == 'completed' ? " style='text-decoration: line-through; color:white;'" : "") . ">";
-                    echo "</form>";
-                    echo "<form action='delete_task.php' method='post'>";
-                    echo "<input type='hidden' name='id' value='" . $row['id'] . "'>";
-                    echo "<button type='submit' class='del-button'><img src='../icons/delete.svg' alt='Delete Icon'></button>";
-                    echo "</form>";
-                    echo "</li>";
-                }
-            } else {
-                echo "<img src='../icons/notask.svg' alt='SVG Image' class='notask-button'>"; 
-            }
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <li <?php echo ($row['status'] == 'completed') ? "class='completed'" : ""; ?>>
+                        <form action='update_task.php' method='post'>
+                            <input type='hidden' name='task_id' value='<?php echo $row['id']; ?>'>
+                            <input type='checkbox' class='custom-checkbox' name='status' value='completed' <?php echo ($row['status'] == 'completed') ? 'checked' : ''; ?> onchange='this.form.submit()'>
+                            <input type='text' name='description' value='<?php echo htmlspecialchars($row['description']); ?>' <?php echo ($row['status'] == 'completed') ? "style='text-decoration: line-through; color:white;'" : ""; ?>>
+                            <select name='category_id' onchange='this.form.submit()'>
+                                <option value=''>No Category</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value='<?php echo $category['id']; ?>' <?php echo ($category['id'] == $row['category_id']) ? "selected" : ""; ?>><?php echo $category['name']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </form>
+                        <form action='delete_task.php' method='post'>
+                            <input type='hidden' name='id' value='<?php echo $row['id']; ?>'>
+                            <button type='submit' class='del-button'><img src='../icons/delete.svg' alt='Delete Icon'></button>
+                        </form>
+                    </li>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <img src='../icons/notask.svg' alt='SVG Image' class='notask-button'> 
+            <?php endif; ?>
 
-            $db->close();
-            ?>
+            <?php $db->close(); ?>
         </ul>
     </div>
 </body>

@@ -76,6 +76,16 @@ h2 {
     color: white;
 }
 
+.category-input-container {
+    display: flex;
+    align-items: center;
+    background-color: #b6c4f9;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
 .task-input-container {
     display: flex;
     align-items: center;
@@ -83,6 +93,13 @@ h2 {
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid #ccc;
+
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .completed {
@@ -90,7 +107,7 @@ h2 {
 }
 
 input[type="text"] {
-    width: 350px;
+    width: 240px;
     margin: 0 10px;
     padding: 10px 20px;
     border: none;
@@ -101,9 +118,9 @@ input[type="text"] {
 
 button.add-button {
     padding: 10px;
-    margin-left: 40px;
+    margin-left: 10px;
     border: none;
-    background-color: #f9f9f9;
+    background-color: transparent;
     cursor: pointer;
 }
 
@@ -127,11 +144,6 @@ button.add-button img {
     height: 20px;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
 
 li {
     background-color: #f9f9f9;
@@ -149,7 +161,7 @@ li {
     height: 20px;
     border: 2px solid #ccc;
     border-radius: 4px;
-    margin-right: 10px;
+    /* margin-right: 5px; */
     margin-left: 10px;
     cursor: pointer;
     background-color: transparent;
@@ -176,4 +188,37 @@ li {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+input#categoryInput{
+    margin-right: 150px;
+}
+
+input#taskInput{
+    margin-right: 53px;
+}
+
+
+select {
+    width: 100px; /* Adjust the width as needed */
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 11px;
+    cursor: pointer;
+    margin-bottom: 2px;
+}
+
+select option {
+    padding: 10px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #B10EF1; /* Change the border color when focused */
+}
+
+select:hover {
+    background-color: #f0f0f0; /* Change the background color on hover */
 }
