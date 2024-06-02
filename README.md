@@ -4,7 +4,7 @@
 
 This is a simple web-based to-do list application that allows users to manage their tasks. Users can add, edit, mark as completed, and delete tasks. Additionally, users can categorize their tasks into different categories for better organization.
 
-## [Live Demo](https://youtu.be/kp0mA4Q2oU8)
+## [Demo](https://youtu.be/kp0mA4Q2oU8)
 
 
 ## Features
