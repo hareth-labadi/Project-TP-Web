@@ -35,9 +35,3 @@ This is a simple web-based to-do list application that allows users to manage th
 3. Existing tasks will be displayed below, where you can mark them as completed, edit their descriptions, change their categories, or delete them.
 4. You can also log out of your account and change the account using the provided logout button.
 
-
-## Contributors
-
-- [Hareth Labadi](https://github.com/hareth-labadi)
-- [Yasmine](https://github.com/YasmineCupcake)
-- [Aya](https://github.com/Ayaboutke)
